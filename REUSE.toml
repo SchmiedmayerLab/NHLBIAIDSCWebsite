@@ -1,0 +1,73 @@
+version = 1
+SPDX-PackageName = "NHLBI-AI Stanford Data Science Center website"
+SPDX-PackageSupplier = "NOASSERTION"
+SPDX-PackageDownloadLocation = "NOASSERTION"
+
+[[annotations]]
+path = [
+  ".editorconfig",
+  ".gitattributes",
+  ".github/**/*.md",
+  ".github/**/*.yaml",
+  ".github/**/*.yml",
+  ".gitignore",
+  ".linkspector.yml",
+  ".lychee.toml",
+  ".markdownlint-cli2.mjs",
+  ".node-version",
+  ".nvmrc",
+  ".prettierignore",
+  ".prettierrc.mjs",
+  "BRAND.md",
+  "CITATION.cff",
+  "CONTRIBUTORS.md",
+  "LICENSE.md",
+  "README.md",
+  "REUSE.toml",
+  "astro.config.mjs",
+  "eslint.config.mjs",
+  "package-lock.json",
+  "package.json",
+  "playwright.config.ts",
+  "public/**/*.md",
+  "public/**/*.png",
+  "public/**/*.svg",
+  "public/**/*.webmanifest",
+  "scripts/**/*.js",
+  "scripts/**/*.mjs",
+  "scripts/**/*.sh",
+  "scripts/**/*.ts",
+  "site.config.mjs",
+  "src/components/**/*.astro",
+  "src/components/**/*.css",
+  "src/components/**/*.js",
+  "src/components/**/*.ts",
+  "src/content.config.ts",
+  "src/content/**/*.md",
+  "src/data/**/*.bib",
+  "src/data/**/*.ts",
+  "src/data/**/*.yaml",
+  "src/data/**/*.yml",
+  "src/env.d.ts",
+  "src/layouts/**/*.astro",
+  "src/lib/**/*.ts",
+  "src/pages/**/*.astro",
+  "src/pages/**/*.ts",
+  "src/styles/**/*.css",
+  "stylelint.config.mjs",
+  "tests/**/*.js",
+  "tests/**/*.json",
+  "tests/**/*.md",
+  "tests/**/*.ts",
+  "tsconfig.json",
+  "vitest.config.ts",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Schmiedmayer Lab and the project authors (see CONTRIBUTORS.md)"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["public/people/**/*.jpg"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Stanford University and respective photographers"
+SPDX-License-Identifier = "LicenseRef-AllRightsReserved"

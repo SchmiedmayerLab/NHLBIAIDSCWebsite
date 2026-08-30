@@ -1,0 +1,79 @@
+---
+import { siteConfig } from '../../site.config.mjs';
+import { withBase } from '../lib/paths';
+
+const currentPath = Astro.url.pathname;
+const isCurrentPage = (href: string) =>
+  href.startsWith('/#') ? false : currentPath.startsWith(withBase(href));
+---
+
+{
+  siteConfig.institution.identityBar && (
+    <div class="stanford-bar" aria-label={siteConfig.institution.name}>
+      <div class="shell stanford-bar-inner">
+        <a href={siteConfig.institution.url}>{siteConfig.institution.name}</a>
+      </div>
+    </div>
+  )
+}
+
+<header class="site-header">
+  <div class="shell masthead">
+    <a class="site-brand" href={withBase('/')} aria-label={`${siteConfig.name} home`}>
+      <img src={withBase('/brand/mark.svg')} width="52" height="52" alt="" />
+      <span>
+        <strong>NHLBI-AI Data Science Center</strong><small>Stanford University</small>
+      </span>
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="primary-navigation"
+    >
+      <span class="menu-icon" aria-hidden="true"></span>
+      <span>Menu</span>
+    </button>
+
+    <nav id="primary-navigation" class="primary-nav" aria-label="Primary navigation">
+      {
+        siteConfig.navigation.map((item) => (
+          <a
+            class:list={{ 'nav-cta': item.href === '/participate/' }}
+            href={withBase(item.href)}
+            aria-current={isCurrentPage(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const nav = document.querySelector<HTMLElement>('#primary-navigation');
+
+  if (button && nav) {
+    const close = (restoreFocus = false) => {
+      button.setAttribute('aria-expanded', 'false');
+      nav.classList.remove('is-open');
+      document.body.classList.remove('menu-open');
+      if (restoreFocus) button.focus();
+    };
+
+    button.addEventListener('click', () => {
+      const open = button.getAttribute('aria-expanded') !== 'true';
+      button.setAttribute('aria-expanded', String(open));
+      nav.classList.toggle('is-open', open);
+      document.body.classList.toggle('menu-open', open);
+    });
+
+    nav.addEventListener('click', () => close());
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && button.getAttribute('aria-expanded') === 'true') close(true);
+    });
+  }
+</script>

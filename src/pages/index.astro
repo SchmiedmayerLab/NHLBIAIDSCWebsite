@@ -1,0 +1,353 @@
+---
+import AimDiagram from '../components/AimDiagram.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import {
+  aims,
+  investigators,
+  nhlbiDataAccess,
+  nhlbiDataPrograms,
+  openSourceTools,
+  researcherServices,
+  workingGroups,
+} from '../data/center';
+import { absoluteUrl } from '../lib/discovery';
+import { withBase } from '../lib/paths';
+import { siteConfig } from '../../site.config.mjs';
+
+const centerStructuredData = {
+  '@type': 'ResearchProject',
+  '@id': `${absoluteUrl('/')}#center-program`,
+  name: 'NHLBI-AI Stanford Data Science Center',
+  description:
+    'A Stanford center advancing safe agentic AI, multimodal models, and reproducible research across NHLBI-supported biomedical data.',
+  url: absoluteUrl('/'),
+  keywords: [
+    'NHLBI',
+    'BioData Catalyst',
+    'TOPMed',
+    'agentic AI',
+    'multimodal AI',
+    'reproducible research',
+  ],
+  about: [...nhlbiDataPrograms, ...nhlbiDataAccess].map((resource) => ({
+    '@type': 'Thing',
+    name: resource.name,
+    description: resource.summary,
+    sameAs: resource.url,
+  })),
+  isPartOf: {
+    '@type': 'ResearchProject',
+    name: siteConfig.initiative.name,
+    url: siteConfig.initiative.url,
+  },
+  funder: {
+    '@type': 'GovernmentOrganization',
+    name: 'National Heart, Lung, and Blood Institute',
+    url: 'https://www.nhlbi.nih.gov/',
+  },
+  member: investigators.map((person) => ({
+    '@type': 'Person',
+    name: person.name,
+    jobTitle: person.role,
+    url: person.profileUrl,
+    image: absoluteUrl(person.image),
+  })),
+  hasPart: openSourceTools.map((tool) => ({
+    '@type': 'SoftwareSourceCode',
+    name: tool.name,
+    description: tool.summary,
+    codeRepository: tool.url,
+  })),
+};
+
+const heartwood = openSourceTools.find((tool) => tool.id === 'heartwood')!;
+---
+
+<BaseLayout structuredData={centerStructuredData}>
+  <section class="hero">
+    <div class="shell hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">
+          <a class="initiative-link" href={siteConfig.initiative.url}
+            >NHLBI Artificial Intelligence Initiative</a
+          >
+          <span aria-hidden="true"> · </span>Stanford University
+        </p>
+        <h1>Agentic AI for biomedical discovery.</h1>
+        <p class="hero-summary">
+          We are building safe, reproducible systems that connect large-scale heart, lung, blood,
+          and sleep data, automate complex research workflows, and help investigators move from
+          questions to validated evidence.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="#capabilities">Explore center capabilities</a>
+          <a class="button button-secondary" href={withBase('/participate/')}>Get involved</a>
+        </div>
+        <p class="hero-context">
+          Built around <a
+            href="https://www.nhlbi.nih.gov/science/trans-omics-precision-medicine-topmed-program"
+            >TOPMed</a
+          > and other NHLBI-supported data · Extending <a
+            href="https://biodatacatalyst.nhlbi.nih.gov/">BioData Catalyst</a
+          > with safe, portable AI workflows
+        </p>
+      </div>
+
+      <div class="hero-map" aria-label="A connected path from biomedical data to discovery">
+        <div class="hero-map-node hero-map-data">
+          <span>Research foundation</span>
+          <strong>Biomedical data at scale</strong>
+          <small>TOPMed · imaging · multi-omics · clinical data</small>
+        </div>
+        <div class="hero-map-line" aria-hidden="true"></div>
+        <div class="hero-map-capabilities">
+          <div><Icon name="secure" /><strong>Secure compute</strong></div>
+          <div><Icon name="multimodal" /><strong>Multimodal AI</strong></div>
+          <div><Icon name="agent" /><strong>Research agents</strong></div>
+        </div>
+        <div class="hero-map-line" aria-hidden="true"></div>
+        <div class="hero-map-node hero-map-outcome">
+          <span>Shared scientific value</span>
+          <strong>Faster, reproducible discovery</strong>
+          <small>Evidence · models · workflows others can reuse</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mission" class="section why-section">
+    <div class="shell split-intro">
+      <div>
+        <p class="eyebrow">Our mission</p>
+        <h2>Turn connected biomedical data into new scientific possibilities.</h2>
+      </div>
+      <div class="prose-stack">
+        <p class="lead">
+          The <a href={siteConfig.initiative.url}>{siteConfig.initiative.name}</a> brings AI and data
+          science experts together with heart, lung, blood, and sleep researchers. Stanford's Data Science
+          Center contributes secure infrastructure, reusable AI tools, multidisciplinary training, and
+          scientific partnerships to that shared effort.
+        </p>
+        <p>
+          Data programs such as <a
+            href="https://www.nhlbi.nih.gov/science/trans-omics-precision-medicine-topmed-program"
+            >TOPMed</a
+          > connect genomic and other omic data with imaging, environmental, and clinical data from parent
+          studies such as <a
+            href="https://www.nhlbi.nih.gov/science/multi-ethnic-study-atherosclerosis-mesa">MESA</a
+          >. Programs including <a
+            href="https://www.nhlbi.nih.gov/news/2022/accelerating-heart-failure-research"
+            >HeartShare</a
+          > and <a
+            href="https://www.nhlbi.nih.gov/science/accelerating-medicines-partnership-heart-failure-program-amp-hf"
+            >AMP Heart Failure</a
+          > extend this foundation with deeply characterized, multimodal data.
+        </p>
+        <p>
+          For controlled genomic data, researchers request access through <a
+            href="https://www.ncbi.nlm.nih.gov/gap/">dbGaP</a
+          >. <a href="https://biodatacatalyst.nhlbi.nih.gov/">BioData Catalyst</a> then brings approved
+          NHLBI data, tools, and secure cloud workspaces together. The center will build on that ecosystem
+          with guarded agents and multimodal AI that automate reproducible research workflows while preserving
+          human oversight and scientific accountability.
+        </p>
+      </div>
+    </div>
+    <div class="shell principles" aria-label="Center design principles">
+      <article>
+        <Icon name="safety" /><strong>Safe for protected research</strong><p>
+          Data controls, human oversight, provenance, and clear boundaries for agent actions.
+        </p>
+      </article>
+      <article>
+        <Icon name="reproducible" /><strong>Reproducible in practice</strong><p>
+          Versioned environments and complete records of data, code, parameters, and outputs.
+        </p>
+      </article>
+      <article>
+        <Icon name="portable" /><strong>Portable across platforms</strong><p>
+          Tools and containers designed to work across approved research environments.
+        </p>
+      </article>
+      <article>
+        <Icon name="community" /><strong>Shared with the community</strong><p>
+          Validated models, workflows, benchmarks, training, and practical support.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section id="capabilities" class="section approach-section">
+    <div class="shell section-intro section-intro-wide">
+      <p class="eyebrow">Center capabilities</p>
+      <h2>A research engine for safe, scalable AI-enabled discovery.</h2>
+      <p>
+        Secure computing, multimodal and foundation models, and guarded research agents work
+        together as one reusable system. We will develop these capabilities for BioData Catalyst
+        workspaces and keep them portable to other approved secure environments.
+      </p>
+    </div>
+
+    <div class="shell diagram-wrap">
+      <AimDiagram />
+    </div>
+
+    <div class="shell aim-grid">
+      {
+        aims.map((aim) => (
+          <article class="aim-card" id={`aim-${aim.id}`}>
+            <div class="aim-card-head">
+              <Icon name={aim.icon} />
+              <p>{aim.shortTitle}</p>
+            </div>
+            <h3>{aim.title}</h3>
+            {aim.relatedToolId === heartwood?.id ? (
+              <p>
+                {aim.summary}{' '}
+                <a class="inline-tool-link" href={heartwood.url}>
+                  {heartwood.name} ↗
+                </a>{' '}
+                is the open-source, auditable coding agent that provides an early foundation for
+                this work.
+              </p>
+            ) : (
+              <p>{aim.summary}</p>
+            )}
+            <ul aria-label={`Expected outputs for ${aim.title}`}>
+              {aim.deliverables.map((deliverable) => (
+                <li>{deliverable}</li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section id="services" class="section outcomes-section">
+    <div class="shell split-intro">
+      <div>
+        <p class="eyebrow">Researcher services</p>
+        <h2>Practical support from research question to shared result.</h2>
+      </div>
+      <p class="lead">
+        The center will serve as a technical and community hub for investigators using AI in heart,
+        lung, blood, and sleep research.
+      </p>
+    </div>
+    <div class="shell outcome-grid">
+      {
+        researcherServices.map((service, index) => (
+          <article id={`service-${index + 1}`}>
+            <Icon name={service.icon} />
+            <h3>{service.title}</h3>
+            <p>{service.summary}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section id="community" class="section governance-section">
+    <div class="shell governance-grid">
+      <div class="governance-copy">
+        <p class="eyebrow eyebrow-light">Community hub</p>
+        <h2>A shared home for responsible agentic AI research.</h2>
+        <p>
+          Researchers will be able to bring questions, test tools, learn new methods, and share
+          validated resources. Working groups connect technical development with domain expertise,
+          participant perspectives, and responsible governance.
+        </p>
+        <a class="button button-light" href={withBase('/participate/')}>Work with the center</a>
+      </div>
+      <div class="governance-model" aria-label="Center governance model">
+        <div class="governance-core">
+          <span>Center services</span><strong>Research support and shared infrastructure</strong
+          ><small>Consultation · engineering · evaluation · training</small>
+        </div>
+        <div class="working-group-grid">
+          {
+            workingGroups.map((group, index) => (
+              <article id={`working-group-${index + 1}`}>
+                <Icon name={group.icon} />
+                <h3>{group.title}</h3>
+                <p>{group.summary}</p>
+              </article>
+            ))
+          }
+        </div>
+        <p class="governance-community">
+          <strong>Open exchange</strong> among investigators, trainees, participants, domain experts,
+          and research infrastructure teams.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="team" class="section team-section">
+    <div class="shell section-intro section-intro-wide">
+      <p class="eyebrow">Center team</p>
+      <h2>One team across clinical science, data science, computing, and ethics.</h2>
+      <p>
+        Clinical questions, model development, research infrastructure, and responsible governance
+        are represented from the start.
+      </p>
+    </div>
+
+    <div class="shell team-list team-grid">
+      {
+        investigators.map((person) => (
+          <article class="person-card" id={person.id}>
+            <div
+              class="person-image-frame"
+              style={`--portrait-position: ${person.portrait.position}; --portrait-scale: ${person.portrait.scale};`}
+            >
+              <img
+                class="person-image"
+                src={withBase(person.image)}
+                width="480"
+                height="480"
+                loading="lazy"
+                decoding="async"
+                alt=""
+              />
+            </div>
+            <div class="person-card-body">
+              <p class="person-role">{person.role}</p>
+              <h3>
+                <a href={person.profileUrl} aria-label={`${person.name}, Stanford profile`}>
+                  {person.name}
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </h3>
+              <span class="person-title">{person.title}</span>
+              <p class="person-focus">{person.focus}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section final-cta">
+    <div class="shell final-cta-inner">
+      <div>
+        <p class="eyebrow eyebrow-light">Work with the center</p>
+        <h2>Bring a research question, use case, or perspective.</h2>
+        <p>
+          We welcome collaborations on data, secure computing, multimodal models, agentic workflows,
+          evaluation, training, and responsible research practice.
+        </p>
+      </div>
+      <div class="final-cta-actions">
+        <a class="button button-light" href={withBase('/participate/')}
+          >Explore ways to contribute</a
+        >
+        <a class="final-cta-link" href={withBase('/work-with-us/')}
+          >Interested in joining the team?</a
+        >
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,9 @@
+<!-- SPDX-FileCopyrightText: 2026 SchmiedmayerLab contributors -->
+<!-- SPDX-License-Identifier: MIT -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="NHLBI-AI Stanford Data Science Center">
+  <rect width="64" height="64" rx="14" fill="#8c1515"/>
+  <path d="M11 17h4c10 0 9 12 17 15 8-3 7-15 17-15h4" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M11 32h42" fill="none" stroke="#d5d0c0" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M11 47h4c10 0 9-12 17-15 8 3 7 15 17 15h4" fill="none" stroke="#e3c887" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="32" cy="32" r="4.5" fill="#fff"/>
+</svg>

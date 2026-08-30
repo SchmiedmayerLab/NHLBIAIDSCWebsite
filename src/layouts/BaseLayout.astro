@@ -1,0 +1,134 @@
+---
+import '@fontsource-variable/source-sans-3/wght.css';
+import '@fontsource-variable/source-sans-3/wght-italic.css';
+import '@fontsource-variable/source-serif-4/wght.css';
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { siteConfig } from '../../site.config.mjs';
+import { absoluteUrl, organizationEntity, websiteEntity, type JsonLdNode } from '../lib/discovery';
+import { withBase } from '../lib/paths';
+
+interface Props {
+  title?: string;
+  canonicalPath?: string;
+  description?: string;
+  noindex?: boolean;
+  structuredData?: JsonLdNode | JsonLdNode[];
+}
+
+const {
+  title,
+  canonicalPath,
+  description = siteConfig.description,
+  noindex = false,
+  structuredData = [],
+} = Astro.props;
+const pageTitle = title ? `${title} | ${siteConfig.shortName}` : siteConfig.name;
+const canonical = new URL(
+  canonicalPath ? withBase(canonicalPath) : Astro.url.pathname,
+  Astro.site ?? siteConfig.url,
+);
+const shouldNoindex = noindex || !siteConfig.discovery.indexing;
+const socialImage = siteConfig.discovery.defaultSocialImage
+  ? absoluteUrl(siteConfig.discovery.defaultSocialImage)
+  : undefined;
+const extraNodes = Array.isArray(structuredData) ? structuredData : [structuredData];
+const webpageId = `${canonical.toString()}#webpage`;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    organizationEntity(),
+    websiteEntity(),
+    {
+      '@type': 'WebPage',
+      '@id': webpageId,
+      url: canonical.toString(),
+      name: title ?? siteConfig.name,
+      description,
+      inLanguage: siteConfig.institution.locale,
+      isPartOf: { '@id': `${absoluteUrl('/')}#website` },
+      about: { '@id': `${absoluteUrl('/')}#organization` },
+    },
+    ...extraNodes,
+  ],
+};
+const serializedJsonLd = JSON.stringify(jsonLd)
+  .replaceAll('<', '\\u003c')
+  .replaceAll('>', '\\u003e')
+  .replaceAll('&', '\\u0026');
+---
+
+<!doctype html>
+<html lang={siteConfig.institution.locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content={siteConfig.institution.themeColor} />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="robots"
+      content={shouldNoindex
+        ? 'noindex, follow'
+        : 'index, follow, max-image-preview:large, max-snippet:-1'}
+    />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="text/markdown" href={absoluteUrl('/llms.txt')} />
+    <link rel="alternate" type="application/json" href={absoluteUrl('/site-index.json')} />
+    <link
+      rel="icon"
+      href={withBase(siteConfig.discovery.favicon)}
+      type="image/svg+xml"
+      sizes="any"
+    />
+    <link
+      rel="icon"
+      href={withBase(siteConfig.discovery.faviconPng)}
+      type="image/png"
+      sizes="32x32"
+    />
+    <link
+      rel="apple-touch-icon"
+      href={withBase(siteConfig.discovery.appleTouchIcon)}
+      sizes="180x180"
+    />
+    <link rel="manifest" href={withBase(siteConfig.discovery.webManifest)} />
+    <title>{pageTitle}</title>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:locale" content={siteConfig.institution.openGraphLocale} />
+    {socialImage && <meta property="og:image" content={socialImage} />}
+    {
+      socialImage && (
+        <meta property="og:image:alt" content={siteConfig.discovery.defaultSocialImageAlt} />
+      )
+    }
+    <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
+    {socialImage && <meta name="twitter:image" content={socialImage} />}
+    {
+      socialImage && (
+        <meta name="twitter:image:alt" content={siteConfig.discovery.defaultSocialImageAlt} />
+      )
+    }
+    <script is:inline type="application/ld+json" set:html={serializedJsonLd} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content" data-skip-link>Skip to main content</a>
+    <SiteHeader />
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
+    <SiteFooter />
+    <script>
+      const skipLink = document.querySelector<HTMLAnchorElement>('[data-skip-link]');
+      const main = document.querySelector<HTMLElement>('#main-content');
+      skipLink?.addEventListener('click', () => main?.focus());
+    </script>
+  </body>
+</html>

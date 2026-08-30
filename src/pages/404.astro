@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/paths';
+---
+
+<BaseLayout
+  title="Page not found"
+  canonicalPath="/404.html"
+  description="The requested page could not be found."
+  noindex
+>
+  <section class="page-hero error-page">
+    <div class="shell page-hero-inner">
+      <p class="eyebrow">Error 404</p>
+      <h1>That page isn’t here.</h1>
+      <p>The address may have changed, or the page may no longer exist.</p>
+      <a class="button" href={withBase('/')}>Return to the center homepage</a>
+    </div>
+  </section>
+</BaseLayout>

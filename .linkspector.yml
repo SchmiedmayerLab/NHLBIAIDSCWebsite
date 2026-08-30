@@ -1,0 +1,15 @@
+dirs:
+  - .
+fileExtensions:
+  - md
+excludedDirs:
+  - src/content
+useGitIgnore: true
+ignorePatterns:
+  - pattern: '^(?:https?|mailto|tel):'
+  - pattern: '^doc:.*$'
+replacementPatterns:
+  - pattern: '(.*)#gh-dark-mode-only'
+    replacement: '$1'
+  - pattern: '(.*)#gh-light-mode-only'
+    replacement: '$1'

@@ -1,0 +1,5 @@
+All rights reserved.
+
+Files carrying this license identifier are not distributed under the repository's MIT license.
+They may be used only with permission from their respective rights holders and subject to any
+applicable Stanford University policies.

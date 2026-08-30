@@ -1,0 +1,12 @@
+<!-- SPDX-FileCopyrightText: 2026 SchmiedmayerLab contributors -->
+<!-- SPDX-License-Identifier: MIT -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 120" role="img" aria-labelledby="title">
+  <title id="title">NHLBI-AI Stanford Data Science Center</title>
+  <rect x="4" y="4" width="112" height="112" rx="25" fill="#8c1515"/>
+  <path d="M24 33h7c17 0 15 22 29 27 14-5 12-27 29-27h7" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+  <path d="M24 60h72" fill="none" stroke="#d5d0c0" stroke-width="6" stroke-linecap="round"/>
+  <path d="M24 87h7c17 0 15-22 29-27 14 5 12 27 29 27h7" fill="none" stroke="#e3c887" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="60" cy="60" r="8" fill="#fff"/>
+  <text x="142" y="52" fill="#2e2d29" font-family="Georgia, serif" font-size="31" font-weight="700">NHLBI-AI Data Science Center</text>
+  <text x="143" y="84" fill="#8c1515" font-family="Arial, sans-serif" font-size="17" font-weight="700" letter-spacing="3">STANFORD UNIVERSITY</text>
+</svg>

@@ -1,0 +1,207 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-checks
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  ASTRO_TELEMETRY_DISABLED: '1'
+
+jobs:
+  security-capabilities:
+    name: Detect GitHub Code Security availability
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      enabled: ${{ steps.code-security.outputs.enabled }}
+    steps:
+      - name: Check repository security capabilities
+        id: code-security
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          visibility="$(gh api -H 'X-GitHub-Api-Version: 2026-03-10' "repos/${REPOSITORY}" --jq '.visibility')"
+          code_security="$(gh api -H 'X-GitHub-Api-Version: 2026-03-10' "repos/${REPOSITORY}" --jq '.security_and_analysis.code_security.status // .security_and_analysis.advanced_security.status // "unavailable"')"
+
+          if [[ "${visibility}" == 'public' || "${code_security}" == 'enabled' ]]; then
+            echo 'enabled=true' >> "${GITHUB_OUTPUT}"
+            echo '::notice title=GitHub Code Security available::Licensed pull requests will receive dependency review.'
+          else
+            echo 'enabled=false' >> "${GITHUB_OUTPUT}"
+            echo "::notice title=GitHub Code Security unavailable::Dependency review is intentionally skipped for this ${visibility} repository."
+          fi
+
+  reuse:
+    name: REUSE compliance
+    uses: SchmiedmayerLab/.github/.github/workflows/reuse.yml@v0.5
+
+  markdown-links:
+    name: Markdown links
+    if: ${{ github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+      pull-requests: read
+    uses: SchmiedmayerLab/.github/.github/workflows/markdown-links.yml@v0.5
+
+  actionlint:
+    name: Workflow syntax
+    uses: SchmiedmayerLab/.github/.github/workflows/actionlint.yml@v0.5
+
+  quality:
+    name: Lint, types, and unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Use Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Check formatting
+        run: npm run format:check
+      - name: Run code, style, and Markdown linters
+        run: npm run lint
+      - name: Audit local Markdown links and fragments
+        run: npm run test:md-links
+      - name: Validate Astro content and TypeScript
+        run: npm run check
+      - name: Run unit tests with coverage
+        run: npm run test:coverage
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage
+          path: coverage/
+          if-no-files-found: warn
+          retention-days: 14
+
+  build:
+    name: Build and audit configured deployment
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Use Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Build static site
+        run: npm run build
+      - name: Audit generated routes, links, fragments, assets, and metadata
+        run: npm run test:site
+
+  portability:
+    name: Build and audit GitHub project path
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Use Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Build static site below a repository path
+        run: npm run build
+        env:
+          SITE_PORTABILITY_CHECK: '1'
+          SITE_URL: https://example.github.io
+          SITE_BASE: /NHLBIAIDSCWebsite
+      - name: Audit project-path routes, links, fragments, assets, and metadata
+        run: npm run test:site
+        env:
+          SITE_PORTABILITY_CHECK: '1'
+          SITE_URL: https://example.github.io
+          SITE_BASE: /NHLBIAIDSCWebsite
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Exercise project-path routes in a browser
+        run: npm run test:e2e -- --project=desktop-chromium
+        env:
+          SITE_PORTABILITY_CHECK: '1'
+          SITE_URL: https://example.github.io
+          SITE_BASE: /NHLBIAIDSCWebsite
+
+  browser:
+    name: Browser and accessibility tests
+    needs: [quality, build, portability]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Use Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Build site
+        run: npm run build
+      - name: Install Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
+      - name: Test phone, tablet, desktop, and wide-screen behavior with Axe
+        run: npm run test:e2e
+      - name: Upload browser report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: playwright-report/
+          if-no-files-found: warn
+          retention-days: 14
+
+  dependency-review:
+    name: Dependency review
+    needs: security-capabilities
+    if: ${{ github.event_name == 'pull_request' && needs.security-capabilities.outputs.enabled == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Review dependency changes
+        uses: actions/dependency-review-action@v5
+        with:
+          fail-on-severity: high

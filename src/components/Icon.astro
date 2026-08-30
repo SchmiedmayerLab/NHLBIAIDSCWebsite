@@ -1,0 +1,80 @@
+---
+interface Props {
+  name: string;
+  label?: string;
+  class?: string;
+}
+
+const iconPaths: Record<string, string[]> = {
+  secure: [
+    'M4 6c0 1.7 3.6 3 8 3s8-1.3 8-3-3.6-3-8-3-8 1.3-8 3Zm0 0v6c0 1.7 3.6 3 8 3 .7 0 1.4 0 2-.1M4 12v6c0 1.7 3.6 3 8 3 .8 0 1.5 0 2.2-.1',
+    'm18 12 4 2v3c0 2.5-1.7 4.5-4 5-2.3-.5-4-2.5-4-5v-3l4-2Z',
+    'm16.6 17 1 1 2-2',
+  ],
+  multimodal: [
+    'M8.5 4.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm7 0a4 4 0 1 0 0 8 4 4 0 0 0 0-8ZM12 10.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z',
+  ],
+  agent: [
+    'M12 3v4m0 10v4M3 12h4m10 0h4M6.3 6.3l2.8 2.8m5.8 5.8 2.8 2.8m0-11.4-2.8 2.8m-5.8 5.8-2.8 2.8',
+    'M12 8.5 15.5 12 12 15.5 8.5 12 12 8.5Z',
+  ],
+  safety: ['M12 3 20 6v5c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6l8-3Z', 'm8.5 12 2.2 2.2 4.8-5'],
+  reproducible: [
+    'M20 7v5h-5M4 17v-5h5',
+    'M6.1 8.5A7 7 0 0 1 18.5 7L20 12M4 12l1.5 5A7 7 0 0 0 17.9 15.5',
+  ],
+  portable: [
+    'M4 7.5 12 3l8 4.5-8 4.5-8-4.5ZM4 7.5V16l8 5 8-5V7.5M12 12v9',
+    'm15.5 14.5 2 2 3.5-3.5',
+  ],
+  community: [
+    'M16 20v-1.5c0-2.5-2-4.5-4.5-4.5h-3C6 14 4 16 4 18.5V20M10 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z',
+    'M16 4.2a3.5 3.5 0 0 1 0 6.6M17.5 14.2c1.7.7 2.5 2.1 2.5 4.3V20',
+  ],
+  plan: ['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z', 'm15.5 8.5-2.1 4.9-4.9 2.1 2.1-4.9 4.9-2.1Z'],
+  build: [
+    'M8 4H4v4h4V4Zm12 0h-4v4h4V4ZM8 16H4v4h4v-4Zm12 0h-4v4h4v-4Z',
+    'M8 6h8M6 8v8m12-8v8M8 18h8',
+  ],
+  evaluate: ['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z', 'm7.5 12 3 3 6-6'],
+  share: [
+    'M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm12 6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z',
+    'm8.7 14 6.6-4m-6.6 6 6.6 4',
+  ],
+  workflow: [
+    'M5 4h5v5H5V4Zm9 11h5v5h-5v-5ZM5 16h4M7 16V9m0 0h7m0 0v6',
+    'm11.5 6.5 2.5 2.5-2.5 2.5',
+  ],
+  model: ['M8 4h8l4 4v8l-4 4H8l-4-4V8l4-4Z', 'M9 9h6v6H9V9Zm3-5v5m0 6v5M4 12h5m6 0h5'],
+  governance: ['M12 3v18M5 7h14M7 7l-3 6h6L7 7Zm10 0-3 6h6l-3-6ZM8 21h8'],
+  call: ['M6 3h9l4 4v14H6V3Zm9 0v5h5', 'M9 12h6m-6 4h4'],
+  collaborate: [
+    'm8.5 14.5 2 2c.8.8 2 .8 2.8 0l4.2-4.2M15.5 9.5l-2-2c-.8-.8-2-.8-2.8 0l-4.2 4.2',
+    'm3 8 3-3 4 4m11-1-3-3-4 4M3 16l3 3 3-3m12 0-3 3-3-3',
+  ],
+  join: [
+    'M9 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 9v-1.5c0-3-2.4-5.5-5.5-5.5h-3C4.5 14 2 16.5 2 19.5V21',
+    'M18 9v6m-3-3h6',
+  ],
+  code: ['m8 8-4 4 4 4m8-8 4 4-4 4M14 5l-4 14'],
+  operations: ['M7 4h10v17H7V4Zm3-2h4v4h-4V2Z', 'm10 11 1.5 1.5L15 9m-5 8h5'],
+};
+
+const { name, label, class: className } = Astro.props;
+const paths = iconPaths[name] ?? iconPaths.model;
+---
+
+<svg
+  class:list={['symbol-icon', className]}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.7"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden={label ? undefined : 'true'}
+  role={label ? 'img' : undefined}
+>
+  {label && <title>{label}</title>}
+  {paths.map((path) => <path d={path} />)}
+</svg>

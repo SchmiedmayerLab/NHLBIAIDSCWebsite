@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+*.log
+coverage/
+playwright-report/
+test-results/
+.lycheecache
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+.vite/
+.env
+.env.*
+!.env.example

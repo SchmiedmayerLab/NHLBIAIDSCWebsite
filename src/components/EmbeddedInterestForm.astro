@@ -1,0 +1,49 @@
+---
+interface Props {
+  id: string;
+  eyebrow: string;
+  heading: string;
+  description: string;
+  formUrl: string;
+  frameTitle: string;
+  privacyNote: string;
+  formHeight?: number;
+  formMobileHeight?: number;
+}
+
+const {
+  id,
+  eyebrow,
+  heading,
+  description,
+  formUrl,
+  frameTitle,
+  privacyNote,
+  formHeight = 1500,
+  formMobileHeight = formHeight,
+} = Astro.props;
+const frameStyle = `--form-height: ${formHeight}px; --form-height-mobile: ${formMobileHeight}px;`;
+---
+
+<section id={id} class="section participation-route">
+  <div class="shell participation-grid">
+    <div class="participation-copy">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2>{heading}</h2>
+      <p>{description}</p>
+      <p class="form-privacy-note">{privacyNote}</p>
+      <p class="form-fallback">
+        Prefer a separate window?{' '}
+        <a href={formUrl} target="_blank" rel="noreferrer"> Open the form in a new page ↗ </a>
+      </p>
+    </div>
+
+    <div class="form-frame" style={frameStyle}>
+      <iframe
+        src={formUrl}
+        title={frameTitle}
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    </div>
+  </div>
+</section>

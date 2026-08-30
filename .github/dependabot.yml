@@ -1,0 +1,26 @@
+#
+# This source file is part of the NHLBI-AI Stanford Data Science Center Website open-source project
+#
+# SPDX-FileCopyrightText: 2026 Schmiedmayer Lab and the project authors (see CONTRIBUTORS.md)
+#
+# SPDX-License-Identifier: MIT
+#
+
+version: 2
+multi-ecosystem-groups:
+  weekly-dependencies:
+    schedule:
+      interval: weekly
+updates:
+  - package-ecosystem: npm
+    directory: /
+    patterns: ['*']
+    multi-ecosystem-group: weekly-dependencies
+    ignore:
+      # TypeScript-ESLint 8 currently requires TypeScript < 6.1.
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major']
+  - package-ecosystem: github-actions
+    directory: /
+    patterns: ['*']
+    multi-ecosystem-group: weekly-dependencies

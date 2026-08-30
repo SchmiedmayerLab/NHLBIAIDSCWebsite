@@ -1,0 +1,112 @@
+---
+import {
+  aims,
+  biodataCatalystWorkspaces,
+  nhlbiDataAccess,
+  nhlbiDataPrograms,
+  openSourceTools,
+} from '../data/center';
+import Icon from './Icon.astro';
+
+const heartwood = openSourceTools.find((tool) => tool.id === 'heartwood');
+---
+
+<figure class="pathway" aria-labelledby="pathway-title" aria-describedby="pathway-description">
+  <figcaption>
+    <p class="eyebrow eyebrow-light">The center in practice</p>
+    <h3 id="pathway-title">Connect data, secure compute, and agentic workflows.</h3>
+    <p id="pathway-description">
+      NHLBI programs generate and curate valuable data. Approved researchers can work with selected
+      resources through BioData Catalyst. The center adds portable AI methods, safeguards, and
+      community support.
+    </p>
+  </figcaption>
+
+  <div class="pathway-grid">
+    <section class="pathway-stage pathway-input" aria-labelledby="pathway-input-title">
+      <p class="pathway-kicker">NHLBI foundation</p>
+      <h4 id="pathway-input-title">Studies and data programs</h4>
+      <ul class="pathway-resource-list">
+        {
+          nhlbiDataPrograms.map((resource) => (
+            <li>
+              <a href={resource.url}>
+                {resource.name}
+                <span aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="pathway-access" aria-label="Data access and analysis path">
+        <p>Access and analysis</p>
+        {
+          nhlbiDataAccess.map((resource, index) => (
+            <>
+              {index > 0 && <span aria-hidden="true">→</span>}
+              <a href={resource.url}>{resource.name}</a>
+            </>
+          ))
+        }
+      </div>
+    </section>
+
+    <div class="pathway-connector" aria-hidden="true"><span>Connect</span></div>
+
+    <section class="pathway-stage pathway-center" aria-labelledby="pathway-center-title">
+      <p class="pathway-kicker">Center capabilities</p>
+      <h4 id="pathway-center-title">Safe AI research at scale</h4>
+      <ul class="pathway-capability-list">
+        {
+          aims.map((aim) => (
+            <li>
+              <Icon name={aim.icon} />
+              <strong>{aim.shortTitle}</strong>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="pathway-platforms">
+        <p>BioData Catalyst workspaces</p>
+        <div>
+          {
+            biodataCatalystWorkspaces.map((workspace) => (
+              <a href={workspace.url}>
+                {workspace.name}
+                <span aria-hidden="true">↗</span>
+              </a>
+            ))
+          }
+          {
+            heartwood && (
+              <a href={heartwood.url}>
+                {heartwood.name}
+                <span aria-hidden="true">↗</span>
+              </a>
+            )
+          }
+        </div>
+        <small>
+          Terra and Seven Bridges provide workspaces. Heartwood adds auditable agentic tooling
+          designed to remain portable across approved secure environments.
+        </small>
+      </div>
+      <p class="pathway-guardrails">
+        <span>Human oversight</span><span>Safety + ELSI</span><span>Provenance</span>
+      </p>
+    </section>
+
+    <div class="pathway-connector" aria-hidden="true"><span>Deliver</span></div>
+
+    <section class="pathway-stage pathway-output" aria-labelledby="pathway-output-title">
+      <p class="pathway-kicker">Shared value</p>
+      <h4 id="pathway-output-title">Scientific progress others can build on</h4>
+      <ul>
+        <li>Validated evidence</li>
+        <li>Reusable models</li>
+        <li>Auditable workflows</li>
+        <li>Community resources</li>
+      </ul>
+    </section>
+  </div>
+</figure>

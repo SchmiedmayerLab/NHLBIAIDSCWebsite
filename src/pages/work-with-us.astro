@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EmbeddedInterestForm from '../components/EmbeddedInterestForm.astro';
+import Icon from '../components/Icon.astro';
+import { openSourceTools } from '../data/center';
+import { siteConfig } from '../../site.config.mjs';
+
+const heartwood = openSourceTools.find((tool) => tool.id === 'heartwood');
+---
+
+<BaseLayout
+  title="Work with us"
+  canonicalPath="/work-with-us/"
+  description="Express interest in future research and software engineering opportunities advancing agentic AI at the NHLBI-AI Stanford Data Science Center."
+>
+  <section class="page-hero work-hero">
+    <div class="shell page-hero-grid">
+      <div>
+        <p class="eyebrow">Work with us</p>
+        <h1>Build agentic AI for biomedical discovery.</h1>
+      </div>
+      <p class="lead">
+        We are preparing to expand the center and are gauging interest from researchers who want to
+        advance safe agentic systems and engineers who want to turn those ideas into reliable,
+        reusable tools.
+      </p>
+    </div>
+  </section>
+
+  <section class="section future-opportunities-section">
+    <div class="shell split-intro">
+      <div>
+        <p class="eyebrow">Who we are looking for</p>
+        <h2>Research insight and engineering depth.</h2>
+      </div>
+      <p class="lead">
+        These are not advertised positions. Early expressions of interest will help us shape the
+        roles and expertise needed for the center's next phase.
+      </p>
+    </div>
+
+    <div class="shell engagement-grid opportunity-grid">
+      <article>
+        <Icon name="agent" />
+        <h3>Postdoctoral researchers and research fellows</h3>
+        <p>
+          Advance agents that can plan, run, audit, and reproduce analyses across multimodal NHLBI
+          data. Relevant backgrounds include machine learning, biomedical data science, clinical
+          informatics, statistics, and heart, lung, blood, or sleep science.
+        </p>
+      </article>
+      <article>
+        <Icon name="code" />
+        <h3>Research software engineers</h3>
+        <p>
+          Build open-source tools, secure execution environments, data interfaces, evaluation
+          harnesses, and cloud workflows that move research prototypes into dependable shared
+          systems.
+        </p>
+        {
+          heartwood && (
+            <p class="opportunity-example">
+              <a href={heartwood.url}>{heartwood.name} ↗</a> is an early example of the auditable,
+              researcher-facing agentic tooling we aim to advance through the center.
+            </p>
+          )
+        }
+      </article>
+    </div>
+
+    <aside class="shell hiring-note">
+      <div>
+        <p class="eyebrow">How this works</p>
+        <h2>This is an expression of interest, not an active search.</h2>
+      </div>
+      <div>
+        <p>
+          Sharing your background helps us plan future opportunities but does not constitute an
+          application or guarantee follow-up. Any formally advertised Stanford position will have
+          its own requirements and must be applied to through the official Stanford Careers system.
+        </p>
+        <a class="button button-secondary" href={siteConfig.careerInterest.stanfordCareersUrl}
+          >Search Stanford Careers ↗</a
+        >
+      </div>
+    </aside>
+  </section>
+
+  <EmbeddedInterestForm
+    id="career-interest"
+    eyebrow="Future team interest"
+    heading="Share your background."
+    description="Tell us which areas interest you, what you hope to contribute, and where we can learn more about your work. You may share public links to your GitHub profile, LinkedIn profile, personal website, or CV or résumé."
+    formUrl={siteConfig.careerInterest.formUrl}
+    frameTitle="NHLBI-AI Stanford Data Science Center future opportunities form"
+    privacyNote="Share only professional information relevant to your interest. Do not include health information, sensitive identifiers, references' private contact details, or confidential research material."
+    formHeight={2260}
+    formMobileHeight={2720}
+  />
+</BaseLayout>

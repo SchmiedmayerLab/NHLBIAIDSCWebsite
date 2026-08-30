@@ -1,0 +1,7 @@
+dist/
+.astro/
+node_modules/
+public/pagefind/
+coverage/
+playwright-report/
+test-results/

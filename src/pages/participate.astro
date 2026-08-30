@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EmbeddedInterestForm from '../components/EmbeddedInterestForm.astro';
+import Icon from '../components/Icon.astro';
+import { withBase } from '../lib/paths';
+import { siteConfig } from '../../site.config.mjs';
+
+const { formUrl } = siteConfig.participation;
+---
+
+<BaseLayout
+  title="Participate"
+  canonicalPath="/participate/"
+  description="Find funding opportunities, collaborate with the NHLBI-AI Stanford Data Science Center, or express interest in joining the team."
+>
+  <section class="page-hero participate-hero">
+    <div class="shell page-hero-grid">
+      <div>
+        <p class="eyebrow">Participate</p>
+        <h1>Connect with the center.</h1>
+      </div>
+      <p class="lead">
+        Follow official project calls, bring a research or technical collaboration to the Stanford
+        center, or tell us that you would like to work with us as the team grows.
+      </p>
+    </div>
+  </section>
+
+  <section class="section contribute-section">
+    <div class="shell section-intro section-intro-wide">
+      <p class="eyebrow">Choose a path</p>
+      <h2>Three ways to take part.</h2>
+      <p>
+        Proposal submissions are managed by NHLBI-AI. Collaboration and future team interest are
+        handled separately by the Stanford center.
+      </p>
+    </div>
+
+    <div class="shell engagement-grid engagement-grid-three">
+      <article>
+        <Icon name="call" />
+        <h3>Follow NHLBI-AI project calls</h3>
+        <p>
+          The initiative publishes its calls, eligibility requirements, deadlines, and application
+          instructions on its official funding page.
+        </p>
+        <div class="card-links">
+          <a href="https://nhlbi-ai.org/funding-opportunities">NHLBI-AI opportunities ↗</a>
+          <a href="https://www.nhlbi.nih.gov/grants-and-training/funding-opportunities-and-contacts"
+            >All active NHLBI opportunities ↗</a
+          >
+        </div>
+      </article>
+      <article>
+        <Icon name="collaborate" />
+        <h3>Collaborate with the center</h3>
+        <p>
+          Contact us about a scientific question, dataset, secure research environment, model,
+          evaluation need, training idea, or community partnership.
+        </p>
+        <div class="card-links"><a href="#contact-center">Contact the center ↓</a></div>
+      </article>
+      <article>
+        <Icon name="join" />
+        <h3>Explore future opportunities</h3>
+        <p>
+          We aim to expand the center soon and are beginning to gauge interest in potential
+          research, engineering, and program positions. Tell us how you would like to contribute.
+        </p>
+        <div class="card-links">
+          <a href={withBase('/work-with-us/')}>Work with us →</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <EmbeddedInterestForm
+    id="contact-center"
+    eyebrow="Contact the center"
+    heading="Tell us how you would like to engage."
+    description="A short note about your role, research question, and the kind of collaboration or support you are looking for is enough to begin."
+    formUrl={formUrl}
+    frameTitle="NHLBI-AI Stanford Data Science Center engagement form"
+    privacyNote="Please do not submit protected health information, participant-level data, unpublished results, or other confidential material."
+    formHeight={1500}
+    formMobileHeight={1760}
+  />
+</BaseLayout>

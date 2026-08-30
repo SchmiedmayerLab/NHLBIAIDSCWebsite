@@ -1,0 +1,80 @@
+---
+import { siteConfig } from '../../site.config.mjs';
+import { withBase } from '../lib/paths';
+---
+
+<footer class="site-footer">
+  <div class="shell footer-main">
+    <div class="footer-statement">
+      <strong>{siteConfig.name}</strong>
+      <p>
+        Agentic AI, multimodal models, and shared services for reproducible biomedical research.
+      </p>
+    </div>
+
+    <div>
+      <h2>Center</h2>
+      <ul>
+        <li><a href={withBase('/#mission')}>Mission</a></li>
+        <li><a href={withBase('/#capabilities')}>Capabilities</a></li>
+        <li><a href={withBase('/#services')}>Services</a></li>
+        <li><a href={withBase('/#community')}>Community</a></li>
+        <li><a href={withBase('/#team')}>Team</a></li>
+        <li><a href={withBase('/participate/')}>Participate</a></li>
+        <li><a href={withBase('/work-with-us/')}>Work with us</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h2>Affiliations</h2>
+      <ul>
+        <li><a href={siteConfig.institution.url}>{siteConfig.institution.name}</a></li>
+        <li><a href={siteConfig.funder.url}>{siteConfig.funder.name}</a></li>
+        <li><a href={siteConfig.initiative.url}>{siteConfig.initiative.shortName}</a></li>
+      </ul>
+    </div>
+  </div>
+
+  {
+    siteConfig.institution.globalFooter && (
+      <div class="stanford-global-footer">
+        <div class="shell stanford-global-footer-inner">
+          <a
+            class="stanford-wordmark"
+            href={siteConfig.institution.url}
+            aria-label="Stanford University home"
+          >
+            <span>Stanford</span>
+            <span>University</span>
+          </a>
+
+          <div class="stanford-global-content">
+            <nav class="stanford-global-nav" aria-label="Stanford University resources">
+              <ul>
+                {siteConfig.institution.primaryLinks.map((link) => (
+                  <li>
+                    <a href={link.href}>
+                      {link.label}
+                      <span class="sr-only"> (link is external)</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <ul class="stanford-policy-links">
+                {siteConfig.institution.policyLinks.map((link) => (
+                  <li>
+                    <a href={link.href} title={link.title}>
+                      {link.label}
+                      <span class="sr-only"> (link is external)</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <p class="stanford-copyright">{siteConfig.institution.copyright}</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+</footer>
