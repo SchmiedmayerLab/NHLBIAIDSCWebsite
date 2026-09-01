@@ -65,6 +65,41 @@ for (const accessibleRoute of [
   });
 }
 
+test('sticky header material preserves hero content clearance', async ({ page }) => {
+  await page.goto(route('/'));
+  const header = page.locator('.site-header');
+  const initial = await page.evaluate(() => {
+    const header = document.querySelector<HTMLElement>('.site-header')!;
+    const hero = document.querySelector<HTMLElement>('.hero')!;
+    const copy = document.querySelector<HTMLElement>('.hero-copy')!;
+    const headerBox = header.getBoundingClientRect();
+    const heroBox = hero.getBoundingClientRect();
+    const copyBox = copy.getBoundingClientRect();
+    const style = getComputedStyle(header);
+    return {
+      headerTop: headerBox.top,
+      headerBottom: headerBox.bottom,
+      heroTop: heroBox.top,
+      copyTop: copyBox.top,
+      position: style.position,
+      backdropFilter: style.backdropFilter || style.getPropertyValue('-webkit-backdrop-filter'),
+    };
+  });
+  expect(initial.position).toBe('sticky');
+  expect(initial.backdropFilter).toContain('blur(4px)');
+  expect(Math.abs(initial.heroTop - initial.headerTop)).toBeLessThan(2);
+  expect(initial.copyTop).toBeGreaterThanOrEqual(initial.headerBottom);
+
+  await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo({ top: 500, behavior: 'auto' });
+  });
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+  await expect
+    .poll(() => header.evaluate((element) => Math.abs(element.getBoundingClientRect().top)))
+    .toBeLessThan(2);
+});
+
 test('the three center capabilities and leadership are present', async ({ page }) => {
   await page.goto(route('/'));
   await expect(page.locator('.aim-card')).toHaveCount(3);
@@ -117,7 +152,10 @@ test('Mia Levanto is the program manager immediately after the co-investigators'
     'href',
     'https://profiles.stanford.edu/mia-levanto',
   );
-  await expect(page.locator('.person-card').nth(11)).toHaveAttribute('id', 'mia-levanto');
+  const precedingRole = await card.evaluate((element) =>
+    element.previousElementSibling?.querySelector('.person-role')?.textContent?.trim(),
+  );
+  expect(precedingRole).toBe('Co-Investigator');
 });
 
 test('the center staff include the newly added Stanford contributors', async ({ page }) => {

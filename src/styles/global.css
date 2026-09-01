@@ -65,6 +65,7 @@
     --reading: 45rem;
     --gutter: clamp(1.15rem, 3.5vw, 3.75rem);
     --section-space: clamp(4.5rem, 8vw, 8rem);
+    --site-header-height: 5.25rem;
     --transition: 180ms ease;
   }
 }
@@ -84,7 +85,7 @@
   html {
     min-width: 20rem;
     scroll-behavior: smooth;
-    scroll-padding-top: 6rem;
+    scroll-padding-top: calc(var(--site-header-height) + 0.75rem);
     background: var(--canvas);
   }
 
@@ -278,8 +279,10 @@
     position: sticky;
     z-index: 100;
     top: 0;
-    margin-bottom: -5.25rem;
+    margin-bottom: calc(-1 * var(--site-header-height));
+    border-bottom: 1px solid var(--border);
     border-bottom: 1px solid color-mix(in srgb, var(--ink), transparent 90%);
+    background: var(--surface);
     background: color-mix(in srgb, color-mix(in srgb, var(--surface) 99%, #000), transparent 8%);
     /* stylelint-disable-next-line property-no-vendor-prefix */
     -webkit-backdrop-filter: blur(0.25rem);
@@ -287,7 +290,7 @@
   }
 
   .masthead {
-    min-height: 5.25rem;
+    min-height: var(--site-header-height);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -475,7 +478,7 @@
     gap: clamp(3rem, 7vw, 7.5rem);
     align-items: center;
     padding-block: clamp(3.75rem, 7vw, 6.5rem);
-    padding-top: calc(clamp(3.75rem, 7vw, 6.5rem) + 5.25rem);
+    padding-top: calc(clamp(3.75rem, 7vw, 6.5rem) + var(--site-header-height));
   }
 
   .hero h1 {
@@ -1263,8 +1266,10 @@
   }
 
   .page-hero {
-    padding-block: clamp(3.5rem, 7vw, 6rem);
-    padding-top: calc(clamp(3.5rem, 7vw, 6rem) + 5.25rem);
+    --page-hero-padding: clamp(3.5rem, 7vw, 6rem);
+
+    padding-block: var(--page-hero-padding);
+    padding-top: calc(var(--page-hero-padding) + var(--site-header-height));
     border-bottom: 1px solid var(--border);
     background:
       radial-gradient(
@@ -1277,7 +1282,7 @@
 
   .participate-hero,
   .work-hero {
-    padding-block: clamp(3rem, 5vw, 4.5rem);
+    --page-hero-padding: clamp(3rem, 5vw, 4.5rem);
   }
 
   .contribute-section,
@@ -1698,6 +1703,7 @@
       min-height: auto;
       gap: 2.5rem;
       padding-block: 3.5rem;
+      padding-top: calc(3.5rem + var(--site-header-height));
     }
 
     .hero h1 {
@@ -1760,14 +1766,7 @@
   @media (width <= 40rem) {
     :root {
       --section-space: 4.25rem;
-    }
-
-    .site-header {
-      margin-bottom: -4.6rem;
-    }
-
-    .masthead {
-      min-height: 4.6rem;
+      --site-header-height: 4.6rem;
     }
 
     .site-brand {
@@ -1812,7 +1811,7 @@
 
     .hero-grid {
       gap: 2rem;
-      padding-top: 2.75rem;
+      padding-top: calc(2.75rem + var(--site-header-height));
     }
 
     .hero-actions {

@@ -8,20 +8,23 @@ export type Aim = {
   deliverables: string[];
 };
 
-export type Investigator = {
+type InvestigatorDetails = {
   id: string;
   name: string;
   role: string;
   title: string;
   focus: string;
   profileUrl: string;
-  image?: string;
-  initials?: string;
   portrait: {
     position: string;
     scale: number;
   };
 };
+
+type InvestigatorPortrait =
+  { image: string; initials?: never } | { image?: never; initials: string };
+
+export type Investigator = InvestigatorDetails & InvestigatorPortrait;
 
 export type LinkedResource = {
   name: string;
