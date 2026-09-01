@@ -65,10 +65,45 @@ for (const accessibleRoute of [
   });
 }
 
+test('sticky header material preserves hero content clearance', async ({ page }) => {
+  await page.goto(route('/'));
+  const header = page.locator('.site-header');
+  const initial = await page.evaluate(() => {
+    const header = document.querySelector<HTMLElement>('.site-header')!;
+    const hero = document.querySelector<HTMLElement>('.hero')!;
+    const copy = document.querySelector<HTMLElement>('.hero-copy')!;
+    const headerBox = header.getBoundingClientRect();
+    const heroBox = hero.getBoundingClientRect();
+    const copyBox = copy.getBoundingClientRect();
+    const style = getComputedStyle(header);
+    return {
+      headerTop: headerBox.top,
+      headerBottom: headerBox.bottom,
+      heroTop: heroBox.top,
+      copyTop: copyBox.top,
+      position: style.position,
+      backdropFilter: style.backdropFilter || style.getPropertyValue('-webkit-backdrop-filter'),
+    };
+  });
+  expect(initial.position).toBe('sticky');
+  expect(initial.backdropFilter).toContain('blur(4px)');
+  expect(Math.abs(initial.heroTop - initial.headerTop)).toBeLessThan(2);
+  expect(initial.copyTop).toBeGreaterThanOrEqual(initial.headerBottom);
+
+  await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo({ top: 500, behavior: 'auto' });
+  });
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+  await expect
+    .poll(() => header.evaluate((element) => Math.abs(element.getBoundingClientRect().top)))
+    .toBeLessThan(2);
+});
+
 test('the three center capabilities and leadership are present', async ({ page }) => {
   await page.goto(route('/'));
   await expect(page.locator('.aim-card')).toHaveCount(3);
-  await expect(page.locator('.person-card')).toHaveCount(12);
+  await expect(page.locator('.person-card')).toHaveCount(15);
   await expect(page.getByText('Contact Principal Investigator')).toHaveCount(1);
   await expect(page.getByText('Multiple Principal Investigator')).toHaveCount(2);
   await expect(page.getByText('Euan A. Ashley, MB ChB, DPhil')).toBeVisible();
@@ -105,7 +140,9 @@ test('Paul Schmiedmayer is identified as a co-investigator', async ({ page }) =>
   ).toHaveAttribute('href', 'https://profiles.stanford.edu/schmiedmayer');
 });
 
-test('Mia Levanto is the program manager after the co-investigators', async ({ page }) => {
+test('Mia Levanto is the program manager immediately after the co-investigators', async ({
+  page,
+}) => {
   await page.goto(route('/'));
   const card = page.locator('#mia-levanto');
   await expect(card).toContainText('Mia Levanto, BS');
@@ -115,15 +152,46 @@ test('Mia Levanto is the program manager after the co-investigators', async ({ p
     'href',
     'https://profiles.stanford.edu/mia-levanto',
   );
-  await expect(page.locator('.person-card').last()).toHaveAttribute('id', 'mia-levanto');
+  const precedingRole = await card.evaluate((element) =>
+    element.previousElementSibling?.querySelector('.person-role')?.textContent?.trim(),
+  );
+  expect(precedingRole).toBe('Co-Investigator');
+});
+
+test('the center staff include the newly added Stanford contributors', async ({ page }) => {
+  await page.goto(route('/'));
+
+  const david = page.locator('#david-jimenez-morales');
+  await expect(david).toContainText('David Jimenez-Morales, PhD');
+  await expect(david.locator('.person-role')).toHaveText('Researcher');
+  await expect(david.locator('.person-title')).toHaveText('Senior Research Scientist');
+  await expect(
+    david.getByRole('link', { name: /David Jimenez-Morales.*Stanford profile/ }),
+  ).toHaveAttribute('href', 'https://profiles.stanford.edu/david-jimenez-morales');
+
+  const nikolai = page.locator('#nikolai-vetr');
+  await expect(nikolai).toContainText('Nikolai G. Vetr, PhD');
+  await expect(nikolai.locator('.person-role')).toHaveText('Researcher');
+  await expect(nikolai.locator('.person-title')).toHaveText('Research Scientist');
+  await expect(nikolai.locator('.person-initials')).toHaveText('NV');
+
+  const jimmy = page.locator('#jimmy-zhen');
+  await expect(jimmy).toContainText('Jimmy Zhen');
+  await expect(jimmy.locator('.person-role')).toHaveText('Researcher');
+  await expect(jimmy.locator('.person-title')).toHaveText('Software Developer');
+  await expect(jimmy.getByRole('link', { name: /Jimmy Zhen.*Stanford profile/ })).toHaveAttribute(
+    'href',
+    'https://med.stanford.edu/mattlab/our-team.html',
+  );
 });
 
 test('team portraits load and investigators follow surname order', async ({ page }) => {
   await page.goto(route('/'));
 
   const portraits = page.locator('.person-image');
-  await expect(portraits).toHaveCount(12);
-  for (let index = 0; index < 12; index += 1) {
+  await expect(portraits).toHaveCount(14);
+  await expect(page.locator('.person-initials')).toHaveCount(1);
+  for (let index = 0; index < 14; index += 1) {
     const portrait = portraits.nth(index);
     await portrait.scrollIntoViewIfNeeded();
     await expect

@@ -8,19 +8,23 @@ export type Aim = {
   deliverables: string[];
 };
 
-export type Investigator = {
+type InvestigatorDetails = {
   id: string;
   name: string;
   role: string;
   title: string;
   focus: string;
   profileUrl: string;
-  image: string;
   portrait: {
     position: string;
     scale: number;
   };
 };
+
+type InvestigatorPortrait =
+  { image: string; initials?: never } | { image?: never; initials: string };
+
+export type Investigator = InvestigatorDetails & InvestigatorPortrait;
 
 export type LinkedResource = {
   name: string;
@@ -279,7 +283,45 @@ export const programManagement: Investigator[] = [
   },
 ];
 
-export const investigators = [...leadership, ...coInvestigators, ...programManagement];
+export const centerStaff: Investigator[] = [
+  {
+    id: 'david-jimenez-morales',
+    name: 'David Jimenez-Morales, PhD',
+    role: 'Researcher',
+    title: 'Senior Research Scientist',
+    focus: 'Reproducible multi-omics analysis and cloud-scale bioinformatics infrastructure.',
+    profileUrl: 'https://profiles.stanford.edu/david-jimenez-morales',
+    image: '/people/david-jimenez-morales.jpg',
+    portrait: { position: '50% 32%', scale: 1.08 },
+  },
+  {
+    id: 'nikolai-vetr',
+    name: 'Nikolai G. Vetr, PhD',
+    role: 'Researcher',
+    title: 'Research Scientist',
+    focus: 'Complex-trait genetics and multi-omic analysis of exercise.',
+    profileUrl: 'https://profiles.stanford.edu/nikolai-vetr',
+    initials: 'NV',
+    portrait: { position: '50% 50%', scale: 1 },
+  },
+  {
+    id: 'jimmy-zhen',
+    name: 'Jimmy Zhen',
+    role: 'Researcher',
+    title: 'Software Developer',
+    focus: 'Research interfaces and scalable software infrastructure for biomedical consortia.',
+    profileUrl: 'https://med.stanford.edu/mattlab/our-team.html',
+    image: '/people/jimmy-zhen.jpg',
+    portrait: { position: '50% 36%', scale: 1.06 },
+  },
+];
+
+export const investigators = [
+  ...leadership,
+  ...coInvestigators,
+  ...programManagement,
+  ...centerStaff,
+];
 
 export const workingGroups = [
   {
