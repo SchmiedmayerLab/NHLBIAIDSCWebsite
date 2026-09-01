@@ -58,7 +58,7 @@ describe('structured discovery records', () => {
 
 describe('team portraits', () => {
   it('defines an intentional crop for every investigator', () => {
-    expect(investigators).toHaveLength(12);
+    expect(investigators).toHaveLength(15);
     for (const investigator of investigators) {
       expect(investigator.portrait.position).toMatch(/^\d+% \d+%$/);
       expect(investigator.portrait.scale).toBeGreaterThanOrEqual(1);

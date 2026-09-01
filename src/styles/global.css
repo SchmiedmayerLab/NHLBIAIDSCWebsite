@@ -278,9 +278,12 @@
     position: sticky;
     z-index: 100;
     top: 0;
-    border-bottom: 1px solid color-mix(in srgb, var(--border), transparent 15%);
-    background: color-mix(in srgb, var(--canvas), transparent 6%);
-    backdrop-filter: blur(1rem);
+    margin-bottom: -5.25rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink), transparent 90%);
+    background: color-mix(in srgb, color-mix(in srgb, var(--surface) 99%, #000), transparent 8%);
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-backdrop-filter: blur(0.25rem);
+    backdrop-filter: blur(0.25rem);
   }
 
   .masthead {
@@ -472,6 +475,7 @@
     gap: clamp(3rem, 7vw, 7.5rem);
     align-items: center;
     padding-block: clamp(3.75rem, 7vw, 6.5rem);
+    padding-top: calc(clamp(3.75rem, 7vw, 6.5rem) + 5.25rem);
   }
 
   .hero h1 {
@@ -1152,6 +1156,21 @@
     transform-origin: var(--portrait-position, 50% 30%);
   }
 
+  .person-initials {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    color: var(--primary);
+    background:
+      radial-gradient(circle at 28% 24%, rgb(255 255 255 / 65%), transparent 42%),
+      linear-gradient(145deg, var(--primary-soft), var(--secondary-soft));
+    font-family: var(--font-serif);
+    font-size: 2.15rem;
+    font-weight: 650;
+    letter-spacing: -0.06em;
+  }
+
   .person-card-body {
     display: flex;
     flex: 1;
@@ -1245,6 +1264,7 @@
 
   .page-hero {
     padding-block: clamp(3.5rem, 7vw, 6rem);
+    padding-top: calc(clamp(3.5rem, 7vw, 6rem) + 5.25rem);
     border-bottom: 1px solid var(--border);
     background:
       radial-gradient(
@@ -1740,6 +1760,10 @@
   @media (width <= 40rem) {
     :root {
       --section-space: 4.25rem;
+    }
+
+    .site-header {
+      margin-bottom: -4.6rem;
     }
 
     .masthead {

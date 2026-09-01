@@ -68,7 +68,7 @@ for (const accessibleRoute of [
 test('the three center capabilities and leadership are present', async ({ page }) => {
   await page.goto(route('/'));
   await expect(page.locator('.aim-card')).toHaveCount(3);
-  await expect(page.locator('.person-card')).toHaveCount(12);
+  await expect(page.locator('.person-card')).toHaveCount(15);
   await expect(page.getByText('Contact Principal Investigator')).toHaveCount(1);
   await expect(page.getByText('Multiple Principal Investigator')).toHaveCount(2);
   await expect(page.getByText('Euan A. Ashley, MB ChB, DPhil')).toBeVisible();
@@ -105,7 +105,9 @@ test('Paul Schmiedmayer is identified as a co-investigator', async ({ page }) =>
   ).toHaveAttribute('href', 'https://profiles.stanford.edu/schmiedmayer');
 });
 
-test('Mia Levanto is the program manager after the co-investigators', async ({ page }) => {
+test('Mia Levanto is the program manager immediately after the co-investigators', async ({
+  page,
+}) => {
   await page.goto(route('/'));
   const card = page.locator('#mia-levanto');
   await expect(card).toContainText('Mia Levanto, BS');
@@ -115,15 +117,43 @@ test('Mia Levanto is the program manager after the co-investigators', async ({ p
     'href',
     'https://profiles.stanford.edu/mia-levanto',
   );
-  await expect(page.locator('.person-card').last()).toHaveAttribute('id', 'mia-levanto');
+  await expect(page.locator('.person-card').nth(11)).toHaveAttribute('id', 'mia-levanto');
+});
+
+test('the center staff include the newly added Stanford contributors', async ({ page }) => {
+  await page.goto(route('/'));
+
+  const david = page.locator('#david-jimenez-morales');
+  await expect(david).toContainText('David Jimenez-Morales, PhD');
+  await expect(david.locator('.person-role')).toHaveText('Researcher');
+  await expect(david.locator('.person-title')).toHaveText('Senior Research Scientist');
+  await expect(
+    david.getByRole('link', { name: /David Jimenez-Morales.*Stanford profile/ }),
+  ).toHaveAttribute('href', 'https://profiles.stanford.edu/david-jimenez-morales');
+
+  const nikolai = page.locator('#nikolai-vetr');
+  await expect(nikolai).toContainText('Nikolai G. Vetr, PhD');
+  await expect(nikolai.locator('.person-role')).toHaveText('Researcher');
+  await expect(nikolai.locator('.person-title')).toHaveText('Research Scientist');
+  await expect(nikolai.locator('.person-initials')).toHaveText('NV');
+
+  const jimmy = page.locator('#jimmy-zhen');
+  await expect(jimmy).toContainText('Jimmy Zhen');
+  await expect(jimmy.locator('.person-role')).toHaveText('Researcher');
+  await expect(jimmy.locator('.person-title')).toHaveText('Software Developer');
+  await expect(jimmy.getByRole('link', { name: /Jimmy Zhen.*Stanford profile/ })).toHaveAttribute(
+    'href',
+    'https://med.stanford.edu/mattlab/our-team.html',
+  );
 });
 
 test('team portraits load and investigators follow surname order', async ({ page }) => {
   await page.goto(route('/'));
 
   const portraits = page.locator('.person-image');
-  await expect(portraits).toHaveCount(12);
-  for (let index = 0; index < 12; index += 1) {
+  await expect(portraits).toHaveCount(14);
+  await expect(page.locator('.person-initials')).toHaveCount(1);
+  for (let index = 0; index < 14; index += 1) {
     const portrait = portraits.nth(index);
     await portrait.scrollIntoViewIfNeeded();
     await expect

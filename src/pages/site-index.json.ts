@@ -58,7 +58,7 @@ export const GET: APIRoute = () => {
       affiliation: siteConfig.institution.name,
       description: person.focus,
       profile: person.profileUrl,
-      image: absoluteUrl(person.image),
+      ...(person.image ? { image: absoluteUrl(person.image) } : {}),
     })),
     ...workingGroups.map((group, index) => ({
       type: 'Organization',

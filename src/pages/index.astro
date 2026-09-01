@@ -51,7 +51,7 @@ const centerStructuredData = {
     name: person.name,
     jobTitle: person.role,
     url: person.profileUrl,
-    image: absoluteUrl(person.image),
+    ...(person.image ? { image: absoluteUrl(person.image) } : {}),
   })),
   hasPart: openSourceTools.map((tool) => ({
     '@type': 'SoftwareSourceCode',
@@ -303,15 +303,21 @@ const heartwood = openSourceTools.find((tool) => tool.id === 'heartwood')!;
               class="person-image-frame"
               style={`--portrait-position: ${person.portrait.position}; --portrait-scale: ${person.portrait.scale};`}
             >
-              <img
-                class="person-image"
-                src={withBase(person.image)}
-                width="480"
-                height="480"
-                loading="lazy"
-                decoding="async"
-                alt=""
-              />
+              {person.image ? (
+                <img
+                  class="person-image"
+                  src={withBase(person.image)}
+                  width="480"
+                  height="480"
+                  loading="lazy"
+                  decoding="async"
+                  alt=""
+                />
+              ) : (
+                <span class="person-initials" aria-hidden="true">
+                  {person.initials}
+                </span>
+              )}
             </div>
             <div class="person-card-body">
               <p class="person-role">{person.role}</p>
