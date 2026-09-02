@@ -176,7 +176,7 @@ test('the center staff include the newly added Stanford contributors', async ({ 
   await expect(nikolai.locator('.person-initials')).toHaveText('NV');
 
   const jimmy = page.locator('#jimmy-zhen');
-  await expect(jimmy).toContainText('Jimmy Zhen');
+  await expect(jimmy).toContainText('Jimmy Zhen, MBA');
   await expect(jimmy.locator('.person-role')).toHaveText('Researcher');
   await expect(jimmy.locator('.person-title')).toHaveText('Software Developer');
   await expect(jimmy.getByRole('link', { name: /Jimmy Zhen.*Stanford profile/ })).toHaveAttribute(

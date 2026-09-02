@@ -306,7 +306,7 @@ export const centerStaff: Investigator[] = [
   },
   {
     id: 'jimmy-zhen',
-    name: 'Jimmy Zhen',
+    name: 'Jimmy Zhen, MBA',
     role: 'Researcher',
     title: 'Software Developer',
     focus: 'Research interfaces and scalable software infrastructure for biomedical consortia.',
